@@ -2,6 +2,8 @@
 
 ## Description:
 
+Originally forked from [Never Lose Equipments](https://hub.sp-tarkov.com/files/file/262-never-lose-equipments/) by Revingly and bluwatch, code adapted for SPT 3.7.0 and refactored.
+
 - Retain all equipment you loaded in with post-death. (Default Behavior)
    - Opt to recover only starting gear post-death without keeping raid-found items by enabling "restoreInitialKit".
    - Configuration for secured container contents during this process is available via "keepSecuredContainer".
