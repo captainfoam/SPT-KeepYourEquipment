@@ -95,7 +95,7 @@ export class KeepYourEquipment extends InraidController
         preRaidPmcData = this.inRaidHelper.updateProfileBaseStats(preRaidPmcData, offraidData, sessionID);
 
         // Check for exit status
-        this.markOrRemoveFoundInRaidItems(offraidData);
+        this.markOrRemoveFoundInRaidItems(offraidData, preRaidPmcData, false);
 
         offraidData.profile.Inventory.items = this.itemHelper.replaceIDs(offraidData.profile, offraidData.profile.Inventory.items, preRaidPmcData.InsuredItems, offraidData.profile.Inventory.fastPanel);
         this.inRaidHelper.addUpdToMoneyFromRaid(offraidData.profile.Inventory.items);
