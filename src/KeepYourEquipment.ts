@@ -10,6 +10,7 @@ import { ILocationBase } from "@spt-aki/models/eft/common/ILocationBase";
 import { IPmcData, IPostRaidPmcData } from "@spt-aki/models/eft/common/IPmcData";
 import { ISaveProgressRequestData } from "@spt-aki/models/eft/inRaid/ISaveProgressRequestData";
 import { ConfigTypes } from "@spt-aki/models/enums/ConfigTypes";
+import { PlayerRaidEndState } from "@spt-aki/models/enums/PlayerRaidEndState";
 import { QuestStatus } from "@spt-aki/models/enums/QuestStatus";
 import { IAirdropConfig } from "@spt-aki/models/spt/config/IAirdropConfig";
 import { IInRaidConfig } from "@spt-aki/models/spt/config/IInRaidConfig";
