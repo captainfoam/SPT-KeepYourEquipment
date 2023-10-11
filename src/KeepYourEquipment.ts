@@ -170,16 +170,15 @@ export class KeepYourEquipment extends InraidController
 
     protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean): void
     {
-        if (offraidData.exit !== PlayerRaidEndState.SURVIVED)
+        if (offraidData.exit === PlayerRaidEndState.SURVIVED || config.enableFoundInRaid)
         {
-            if (config.enableFoundInRaid)
-            {
-                // Mark found items and replace item ID's if the player survived
-                offraidData.profile = this.addSpawnedInSessionPropertyToItems(pmcData, offraidData.profile, isPlayerScav);
-            } else {
-                // Remove FIR status if the player havn't survived
-                offraidData.profile = this.inRaidHelper.removeSpawnedInSessionPropertyFromItems(offraidData.profile);
-            }
+            // Mark found items and replace item ID's if the player survived
+            offraidData.profile = this.addSpawnedInSessionPropertyToItems(pmcData, offraidData.profile, isPlayerScav);
+        }
+        else if (offraidData.exit !== PlayerRaidEndState.SURVIVED)
+        {
+            // Remove FIR status if the player didn't survive
+            offraidData.profile = this.inRaidHelper.removeSpawnedInSessionPropertyFromItems(offraidData.profile);
         }
     }
 
