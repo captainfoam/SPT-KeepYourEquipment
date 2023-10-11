@@ -8,6 +8,9 @@
 - Items acquired during a raid (in pockets, rig, backpack, or container) can be kept post-death but lose the FIR status if "enableFoundInRaid" is set to true.
 - Insure and drop items during a raid for insurance fraud purposes.
 
+## Installation instructions
+
+Download the archive from the [releases page](https://github.com/captainfoam/SPT-KeepYourEquipment/releases) and extract into the `user/mods` folder.
 
 ## Work in progress:
 
