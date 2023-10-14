@@ -22,12 +22,14 @@ Download the archive from the [releases page](https://github.com/captainfoam/SPT
 
 ## Configurable values
 
-- **keepOriginalEquipment**: true/false
-    - Regain all initial gear post-death.
-- **keepSecuredContainer**: true/false (Relevant only with "keepOriginalEquipment" enabled)
+- **keepOriginalEquipment**: true/false (Default: `true`)
+    - Regain all original gear if you die during a raid.
+- **keepSecuredContainer**: true/false (Default: `true`, keepOriginalEquipment must also be set to `true`)
     - Decides if the secured container contents are reset post-death. Note: potential for item duplication exists if raid items are moved to the secured container.
-- **enableFoundInRaid**: true/false
-    - Set to true to retain FIR status for raid-acquired items post-death. Inactive when "keepOriginalEquipment" is true.
+- **enableFoundInRaid**: true/false (Default: `false`)
+    - Set to true to retain FIR status for raid-acquired items post-death. Inactive when "keepOriginalEquipment" is `true`.
+- **keepMapKeys**: true/false (Default: `true`)
+    - Normally, the game will consume your Labs keycard on a successful raid. Setting this to `true` will keep the key instead.
 
 ## Encountered a bug or want a feature?
 Please [create an issue](https://github.com/captainfoam/SPT-KeepYourEquipment/issues) in the project page and I'll take a look!

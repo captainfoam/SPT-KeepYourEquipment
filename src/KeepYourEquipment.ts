@@ -29,7 +29,7 @@ import { InventoryHelper } from "@spt-aki/helpers/InventoryHelper";
 import { Item } from "@spt-aki/models/eft/common/tables/IItem";
 import { MatchBotDetailsCacheService } from "@spt-aki/services/MatchBotDetailsCacheService";
 import { PmcChatResponseService } from "@spt-aki/services/PmcChatResponseService";
-import * as config from "../config/config.json";
+import * as KYEConfig from "../config/config.json";
 
 import { VFS } from "@spt-aki/utils/VFS";
 
@@ -102,7 +102,7 @@ export class KeepYourEquipment extends InraidController
 
         // skips overwriting the new inventory if keepOriginalEquipment is enabled and player is dead
         // if true disables Insurance
-        if (config.keepOriginalEquipment && isDead) {
+        if (KYEConfig.keepOriginalEquipment && isDead) {
             this.logger.log("Keep Your Equipment: Player died, restoring original equipment", "red", "white");
             mapHasInsuranceEnabled = false;
         } else {
@@ -154,7 +154,7 @@ export class KeepYourEquipment extends InraidController
 
     protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean = true): void
     {
-        if (offraidData.exit === PlayerRaidEndState.SURVIVED || config.enableFoundInRaid)
+        if (offraidData.exit === PlayerRaidEndState.SURVIVED || KYEConfig.enableFoundInRaid)
         {
             // Mark found items and replace item ID's if the player survived
             offraidData.profile = this.addSpawnedInSessionPropertyToItems(pmcData, offraidData.profile, isPlayerScav);
@@ -170,7 +170,7 @@ export class KeepYourEquipment extends InraidController
     {
         this.updatePmcHealthPostRaid(postRaidSaveRequest, pmcData);
 
-        if (config.keepOriginalEquipment && config.keepSecuredContainer) {
+        if (KYEConfig.keepOriginalEquipment && KYEConfig.keepSecuredContainer) {
             this.logger.log("Keep Your Equipment: Keeping secured container", "red", "white");
             this.keepSecuredContainer(postRaidSaveRequest.profile.Inventory.items, pmcData, sessionID);
         }
