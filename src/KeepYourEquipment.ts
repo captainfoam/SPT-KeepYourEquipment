@@ -168,7 +168,7 @@ export class KeepYourEquipment extends InraidController
         return filteredItems;
     }
 
-    protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean): void
+    protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean = true): void
     {
         if (offraidData.exit === PlayerRaidEndState.SURVIVED || config.enableFoundInRaid)
         {
