@@ -167,7 +167,6 @@ export class KeepYourEquipment extends InraidController
      * @param sessionID Session id
      * @returns Updated profile object
      */
-
     protected performPostRaidActionsWhenDead(postRaidSaveRequest: ISaveProgressRequestData, pmcData: IPmcData, insuranceEnabled: boolean, preRaidGear: Item[], sessionID: string): IPmcData
     {
         this.updatePmcHealthPostRaid(postRaidSaveRequest, pmcData);
