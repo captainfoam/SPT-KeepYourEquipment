@@ -100,9 +100,9 @@ export class KeepYourEquipment extends InraidController
         offraidData.profile.Inventory.items = this.itemHelper.replaceIDs(offraidData.profile, offraidData.profile.Inventory.items, preRaidPmcData.InsuredItems, offraidData.profile.Inventory.fastPanel);
         this.inRaidHelper.addUpdToMoneyFromRaid(offraidData.profile.Inventory.items);
 
-        // skips overwriting the new inventory if restoreInitialKit is enabled and player is dead
+        // skips overwriting the new inventory if keepOriginalEquipment is enabled and player is dead
         // if true disables Insurance
-        if (config.restoreInitialKit && isDead) {
+        if (config.keepOriginalEquipment && isDead) {
             this.logger.log("Keep Your Equipment: Player died, restoring original equipment", "red", "white");
             mapHasInsuranceEnabled = false;
         } else {
@@ -186,7 +186,7 @@ export class KeepYourEquipment extends InraidController
     {
         this.updatePmcHealthPostRaid(postRaidSaveRequest, pmcData);
 
-        if (config.restoreInitialKit && config.keepSecuredContainer) {
+        if (config.keepOriginalEquipment && config.keepSecuredContainer) {
             this.logger.log("Keep Your Equipment: Keeping secured container", "red", "white");
             this.keepSecuredContainer(postRaidSaveRequest.profile.Inventory.items, pmcData, sessionID);
         }
