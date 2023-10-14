@@ -1,10 +1,10 @@
 {
     "name": "Keep Your Equipment",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "main": "src/mod.js",
     "license": "NCSA",
     "author": "Captain Foam",
-    "akiVersion": "3.7.0",
+    "akiVersion": "3.7.1",
     "scripts": {
         "setup": "npm i"
     },
