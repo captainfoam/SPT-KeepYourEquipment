@@ -14,6 +14,10 @@ Originally forked from [Never Lose Equipments](https://hub.sp-tarkov.com/files/f
 
 Download the archive from the [releases page](https://github.com/captainfoam/SPT-KeepYourEquipment/releases) and extract into the `user/mods` folder.
 
+## Upgrade instructions
+
+Replace the `KeepYourEquipment` folder in the `user/mods` folder. Since version `1.3.0`, the folder will be named the same.
+
 ## Work in progress
 
 - Configuration to retain/not retain items found during a raid.
@@ -24,10 +28,10 @@ Download the archive from the [releases page](https://github.com/captainfoam/SPT
 
 - **keepOriginalEquipment**: true/false (Default: `true`)
     - Regain all original gear if you die during a raid.
-- **keepSecuredContainer**: true/false (Default: `true`, keepOriginalEquipment must also be set to `true`)
+- **keepSecuredContainer**: true/false (Default: `true`, `keepOriginalEquipment` must also be set to `true`)
     - Decides if the secured container contents are reset post-death. Note: potential for item duplication exists if raid items are moved to the secured container.
 - **enableFoundInRaid**: true/false (Default: `false`)
-    - Set to true to retain FIR status for raid-acquired items post-death. Inactive when "keepOriginalEquipment" is `true`.
+    - Set to true to retain FIR status for raid-acquired items post-death.
 - **keepMapKeys**: true/false (Default: `true`)
     - Normally, the game will consume your Labs keycard on a successful raid. Setting this to `true` will keep the key instead.
 
