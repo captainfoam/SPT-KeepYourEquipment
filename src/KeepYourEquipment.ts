@@ -152,22 +152,6 @@ export class KeepYourEquipment extends InraidController
         }
     }
 
-    protected filterItemsByParentId(items: Item[], parentId: string): Item[] {
-        const filteredItems: Item[] = [];
-
-        function recursiveFilter(currentParentId: string) {
-            for (const item of items) {
-                if (item.parentId === currentParentId) {
-                    filteredItems.push(item);
-                    recursiveFilter(item._id);
-                }
-            }
-        }
-
-        recursiveFilter(parentId);
-        return filteredItems;
-    }
-
     protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean = true): void
     {
         if (offraidData.exit === PlayerRaidEndState.SURVIVED || config.enableFoundInRaid)
@@ -213,7 +197,12 @@ export class KeepYourEquipment extends InraidController
         return pmcData;
     }
 
-    // Keeps the secured Container from the raid and replaces initial one
+    /**
+     * Keeps the secured Container from the raid and replaces initial one
+     * @param offRaidItems The items from the raid
+     * @param pmcData The player's data after the raid
+     * @param sessionID The session ID
+     */
     private keepSecuredContainer(offRaidItems: Item[], pmcData: IPmcData, sessionID: string): void {
 
         const raidSecuredContainer = offRaidItems.find(item => item.slotId === "SecuredContainer");
@@ -234,16 +223,36 @@ export class KeepYourEquipment extends InraidController
         pmcData.Inventory.items = [...pmcData.Inventory.items, ...res];
     }
 
-    private replaceParentId(items: Item[], oldParentId: string, newParentId: string): Item[] {
-        var stack = [...items];
+    protected filterItemsByParentId(items: Item[], parentId: string): Item[] {
+        const filteredItems: Item[] = [];
 
-        stack.forEach(item => {
+        function recursiveFilter(currentParentId: string) {
+            for (const item of items) {
+                if (item.parentId === currentParentId) {
+                    filteredItems.push(item);
+                    recursiveFilter(item._id);
+                }
+            }
+        }
+
+        recursiveFilter(parentId);
+        return filteredItems;
+    }
+
+    /**
+     * Replaces the parent ID of each item in the array with the new parent ID.
+     * @param items The array of items to update.
+     * @param oldParentId The ID of the old parent.
+     * @param newParentId The ID of the new parent.
+     * @returns The updated array of items.
+     */
+    private replaceParentId(items: Item[], oldParentId: string, newParentId: string): Item[] {
+        items.forEach(item => {
             if (item.parentId === oldParentId) {
                 item.parentId = newParentId;
             }
         });
-
-        return stack;
+        return items;
     }
 
     /**
