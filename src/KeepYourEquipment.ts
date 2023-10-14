@@ -97,13 +97,19 @@ export class KeepYourEquipment extends InraidController
         offraidData.profile.Inventory.items = this.itemHelper.replaceIDs(offraidData.profile, offraidData.profile.Inventory.items, preRaidPmcData.InsuredItems, offraidData.profile.Inventory.fastPanel);
         this.inRaidHelper.addUpdToMoneyFromRaid(offraidData.profile.Inventory.items);
 
-        // skips overwriting the new inventory if keepOriginalEquipment is enabled and player is dead
         // if true disables Insurance
-        if (KYEConfig.keepOriginalEquipment && isDead) {
-            this.logger.log("Keep Your Equipment: Player died, restoring original equipment", "red", "white");
-            mapHasInsuranceEnabled = false;
-        } else {
-            preRaidPmcData = this.inRaidHelper.setInventory(sessionID, preRaidPmcData, offraidData.profile);
+        if (isDead)
+        {
+            // skips overwriting the new inventory if keepOriginalEquipment is enabled and player is dead
+            if (KYEConfig.keepOriginalEquipment) {
+                this.logger.log("Keep Your Equipment: Player died, restoring original equipment!", "red", "white");
+                mapHasInsuranceEnabled = false;
+            }
+
+            if (!KYEConfig.keepOriginalEquipment || KYEConfig.enableFoundInRaid) {
+                this.logger.log("Keep Your Equipment: enableFoundInRaid enabled, saving all items!", "red", "white");
+                preRaidPmcData = this.inRaidHelper.setInventory(sessionID, preRaidPmcData, offraidData.profile);
+            }
         }
 
         this.healthHelper.saveVitality(preRaidPmcData, offraidData.health, sessionID);
