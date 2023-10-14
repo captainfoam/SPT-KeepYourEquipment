@@ -179,7 +179,7 @@ export class KeepYourEquipment extends InraidController
         if (KYEConfig.keepSecuredContainer)
         {
             this.logger.log("Keep Your Equipment: Keeping secured container", "red", "white");
-            this.keepSecuredContainer(postRaidSaveRequest.profile.Inventory.items, pmcData, sessionID);
+            this.keepOriginalEquipment(postRaidSaveRequest.profile.Inventory.items, pmcData, sessionID);
         }
 
         if (this.inRaidHelper.removeQuestItemsOnDeath())
@@ -210,7 +210,7 @@ export class KeepYourEquipment extends InraidController
      * @param pmcData The player's data after the raid
      * @param sessionID The session ID
      */
-    private keepSecuredContainer(offRaidItems: Item[], pmcData: IPmcData, sessionID: string): void {
+    private keepOriginalEquipment(offRaidItems: Item[], pmcData: IPmcData, sessionID: string): void {
 
         const raidSecuredContainer = offRaidItems.find(item => item.slotId === "SecuredContainer");
         const initialSecuredContainer = pmcData.Inventory.items.find(item => item.slotId === "SecuredContainer");

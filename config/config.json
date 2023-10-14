@@ -1,6 +1,5 @@
 {
-	"keepOriginalEquipment": false,
-	"keepSecuredContainer": true,
+	"keepOriginalEquipment": true,
 	"enableFoundInRaid": true,
 	"keepMapKeys": true,
 	"equipmentToKeep": {
