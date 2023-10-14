@@ -1,13 +1,12 @@
 {
     "name": "Keep Your Equipment",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "main": "src/mod.js",
     "license": "NCSA",
     "author": "Captain Foam",
     "akiVersion": "3.7.0",
     "scripts": {
-        "setup": "npm i",
-        "build": "npx tsc mod.ts KeepYourEquipment.ts"
+        "setup": "npm i"
     },
     "devDependencies": {
         "@types/node": "16.18.10",
