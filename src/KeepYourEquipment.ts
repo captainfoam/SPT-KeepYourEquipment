@@ -31,8 +31,6 @@ import { MatchBotDetailsCacheService } from "@spt-aki/services/MatchBotDetailsCa
 import { PmcChatResponseService } from "@spt-aki/services/PmcChatResponseService";
 import * as KYEConfig from "../config/config.json";
 
-import { VFS } from "@spt-aki/utils/VFS";
-
 @injectable()
 export class KeepYourEquipment extends InraidController
 {
@@ -59,7 +57,6 @@ export class KeepYourEquipment extends InraidController
         @inject("ApplicationContext") protected applicationContext: ApplicationContext,
         @inject("ConfigServer") protected configServer: ConfigServer,
         @inject("InventoryHelper") protected inventoryHelper: InventoryHelper,
-        @inject("VFS") protected vfs: VFS
     )
     {
         super(logger,
@@ -75,9 +72,9 @@ export class KeepYourEquipment extends InraidController
     }
 
     /**
-     * Handle updating the profile post-pmc raid
+     * Handle updating player profile post-pmc raid
      * @param sessionID session id
-     * @param offraidData post-raid data of raid
+     * @param offraidData post-raid data
      */
     protected savePmcProgress(sessionID: string, offraidData: ISaveProgressRequestData): void
     {
@@ -152,41 +149,27 @@ export class KeepYourEquipment extends InraidController
         }
     }
 
-    protected filterItemsByParentId(items: Item[], parentId: string): Item[] {
-        const filteredItems: Item[] = [];
-
-        function recursiveFilter(currentParentId: string) {
-            for (const item of items) {
-                if (item.parentId === currentParentId) {
-                    filteredItems.push(item);
-                    recursiveFilter(item._id);
-                }
-            }
-        }
-
-        recursiveFilter(parentId);
-        return filteredItems;
-    }
-
-    protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean = true): void
-    {
-        if (offraidData.exit === PlayerRaidEndState.SURVIVED || KYEConfig.enableFoundInRaid)
-        {
-            // Mark found items and replace item ID's if the player survived
-            offraidData.profile = this.addSpawnedInSessionPropertyToItems(pmcData, offraidData.profile, isPlayerScav);
-        }
-        else if (offraidData.exit !== PlayerRaidEndState.SURVIVED)
-        {
-            // Remove FIR status if the player didn't survive
-            offraidData.profile = this.inRaidHelper.removeSpawnedInSessionPropertyFromItems(offraidData.profile);
-        }
-    }
-
+    /**
+     * Make changes to pmc profile after they've died in raid,
+     * Alter bodypart hp, handle insurance, delete inventory items, remove carried quest items
+     * @param postRaidSaveRequest Post-raid save request
+     * @param pmcData Pmc profile
+     * @param insuranceEnabled Is insurance enabled
+     * @param preRaidGear Gear player had before raid
+     * @param sessionID Session id
+     * @returns Updated profile object
+     */
     protected performPostRaidActionsWhenDead(postRaidSaveRequest: ISaveProgressRequestData, pmcData: IPmcData, insuranceEnabled: boolean, preRaidGear: Item[], sessionID: string): IPmcData
     {
         this.updatePmcHealthPostRaid(postRaidSaveRequest, pmcData);
 
-        if (KYEConfig.keepOriginalEquipment && KYEConfig.keepSecuredContainer) {
+        if (!KYEConfig.keepOriginalEquipment)
+        {
+            this.inRaidHelper.deleteInventory(pmcData, sessionID);
+        }
+
+        if (KYEConfig.keepSecuredContainer)
+        {
             this.logger.log("Keep Your Equipment: Keeping secured container", "red", "white");
             this.keepSecuredContainer(postRaidSaveRequest.profile.Inventory.items, pmcData, sessionID);
         }
@@ -244,6 +227,37 @@ export class KeepYourEquipment extends InraidController
         });
 
         return stack;
+    }
+
+    protected filterItemsByParentId(items: Item[], parentId: string): Item[] {
+        const filteredItems: Item[] = [];
+
+        function recursiveFilter(currentParentId: string) {
+            for (const item of items) {
+                if (item.parentId === currentParentId) {
+                    filteredItems.push(item);
+                    recursiveFilter(item._id);
+                }
+            }
+        }
+
+        recursiveFilter(parentId);
+        return filteredItems;
+    }
+
+
+    protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean = true): void
+    {
+        if (offraidData.exit === PlayerRaidEndState.SURVIVED || KYEConfig.enableFoundInRaid)
+        {
+            // Mark found items and replace item ID's if the player survived
+            offraidData.profile = this.addSpawnedInSessionPropertyToItems(pmcData, offraidData.profile, isPlayerScav);
+        }
+        else if (offraidData.exit !== PlayerRaidEndState.SURVIVED)
+        {
+            // Remove FIR status if the player didn't survive
+            offraidData.profile = this.inRaidHelper.removeSpawnedInSessionPropertyFromItems(offraidData.profile);
+        }
     }
 
     /**
