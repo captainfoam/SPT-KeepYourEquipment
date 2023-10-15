@@ -109,10 +109,12 @@ export class KeepYourEquipment extends InraidController
                 mapHasInsuranceEnabled = false;
             }
 
-            if (!KYEConfig.keepOriginalEquipment || KYEConfig.enableFoundInRaid) {
+            if (KYEConfig.enableFoundInRaid) {
                 this.logger.log("Keep Your Equipment: enableFoundInRaid enabled, saving all items!", "red", "white");
                 preRaidPmcData = this.inRaidHelper.setInventory(sessionID, preRaidPmcData, offraidData.profile);
             }
+        } else {
+            preRaidPmcData = this.inRaidHelper.setInventory(sessionID, preRaidPmcData, offraidData.profile);
         }
 
         this.healthHelper.saveVitality(preRaidPmcData, offraidData.health, sessionID);

@@ -1,6 +1,6 @@
 {
     "name": "Keep Your Equipment",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "main": "src/mod.js",
     "license": "NCSA",
     "author": "Captain Foam",
