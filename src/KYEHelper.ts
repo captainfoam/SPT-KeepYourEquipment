@@ -15,6 +15,7 @@ import { ProfileFixerService } from "@spt-aki/services/ProfileFixerService";
 import { JsonUtil } from "@spt-aki/utils/JsonUtil";
 import { InRaidHelper } from "@spt-aki/helpers/InRaidHelper";
 import { InventoryHelper } from "@spt-aki/helpers/InventoryHelper";
+import { ProfileHelper } from "@spt-aki/helpers/ProfileHelper";
 import { ItemHelper } from "@spt-aki/helpers/ItemHelper";
 import { PaymentHelper } from "@spt-aki/helpers/PaymentHelper";
 import { QuestHelper } from "@spt-aki/helpers/QuestHelper";
@@ -33,6 +34,7 @@ export class KYEHelper extends InRaidHelper
         @inject("ItemHelper") protected itemHelper: ItemHelper,
         @inject("DatabaseServer") protected databaseServer: DatabaseServer,
         @inject("InventoryHelper") protected inventoryHelper: InventoryHelper,
+        @inject("ProfileHelper") protected profileHelper: ProfileHelper,
         @inject("QuestHelper") protected questHelper: QuestHelper,
         @inject("PaymentHelper") protected paymentHelper: PaymentHelper,
         @inject("LocalisationService") protected localisationService: LocalisationService,
@@ -47,6 +49,7 @@ export class KYEHelper extends InRaidHelper
             itemHelper,
             databaseServer,
             inventoryHelper,
+            profileHelper,
             questHelper,
             paymentHelper,
             localisationService,
@@ -54,14 +57,7 @@ export class KYEHelper extends InRaidHelper
             configServer
         );
 
-        let lostOnDeathOverrides = KYEConfig.equipmentToKeep;
-        for (let toKeep in lostOnDeathOverrides)
-        {
-            lostOnDeathOverrides[toKeep] = !lostOnDeathOverrides[toKeep];
-        }
-        const lostOnDeathDefaults = this.configServer.getConfig(ConfigTypes.LOST_ON_DEATH);
-
-        this.lostOnDeathConfig = KYEConfig.enableFoundInRaid ? { ...lostOnDeathDefaults, ...lostOnDeathOverrides } : lostOnDeathDefaults;
+        this.lostOnDeathConfig = this.configServer.getConfig(ConfigTypes.LOST_ON_DEATH);
         this.inRaidConfig = this.configServer.getConfig(ConfigTypes.IN_RAID);
     }
 
@@ -89,5 +85,23 @@ export class KYEHelper extends InRaidHelper
                 break;
             }
         }
+    }
+
+    public setInventory(sessionID: string, serverProfile: IPmcData, postRaidProfile: IPmcData): IPmcData
+    {
+        // Store insurance (as removeItem() removes insurance also)
+        const insured = this.jsonUtil.clone(serverProfile?.InsuredItems);
+
+        // Remove possible equipped items from before the raid
+        this.inventoryHelper.removeItem(serverProfile, serverProfile?.Inventory.equipment, sessionID);
+        this.inventoryHelper.removeItem(serverProfile, serverProfile?.Inventory.questRaidItems, sessionID);
+        this.inventoryHelper.removeItem(serverProfile, serverProfile?.Inventory.sortingTable, sessionID);
+
+        // Add the new items
+        serverProfile.Inventory.items = [...postRaidProfile?.Inventory.items, ...serverProfile?.Inventory.items];
+        serverProfile.Inventory.fastPanel = postRaidProfile?.Inventory.fastPanel;
+        serverProfile.InsuredItems = insured;
+
+        return serverProfile;
     }
 }

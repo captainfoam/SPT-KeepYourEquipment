@@ -1,22 +1,6 @@
 {
 	"keepOriginalEquipment": true,
-	"enableFoundInRaid": true,
-	"keepMapKeys": true,
-	"equipmentToKeep": {
-		"ArmBand": true,
-		"Compass": true,
-		"Headwear": true,
-		"Earpiece": true,
-		"FaceCover": true,
-		"ArmorVest": true,
-		"Eyewear": true,
-		"TacticalVest": true,
-		"Backpack": true,
-		"Holster": true,
-		"FirstPrimaryWeapon": true,
-		"SecondPrimaryWeapon": true,
-		"Scabbard": true,
-		"Pockets": true,
-		"SecuredContainer": true
-	}
+	"keepSecuredContainer": true,
+	"enableFoundInRaid": false,
+	"keepMapKeys": true
 }
