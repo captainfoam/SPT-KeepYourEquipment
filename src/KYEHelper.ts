@@ -57,7 +57,16 @@ export class KYEHelper extends InRaidHelper
             configServer
         );
 
-        this.lostOnDeathConfig = this.configServer.getConfig(ConfigTypes.LOST_ON_DEATH);
+        let lostOnDeathOverrides = KYEConfig.equipmentToKeep;
+
+        // invert booleans as SPT expects `false` to mean keep and `true` to mean remove
+        for (let toKeep in lostOnDeathOverrides)
+        {
+            lostOnDeathOverrides[toKeep] = !lostOnDeathOverrides[toKeep];
+        }
+        const lostOnDeathDefaults = this.configServer.getConfig(ConfigTypes.LOST_ON_DEATH);
+
+        this.lostOnDeathConfig = KYEConfig.enableFoundInRaid ? { ...lostOnDeathDefaults, ...lostOnDeathOverrides } : lostOnDeathDefaults;
         this.inRaidConfig = this.configServer.getConfig(ConfigTypes.IN_RAID);
     }
 
