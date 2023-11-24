@@ -1,4 +1,8 @@
+import { inject, injectable } from "tsyringe";
+
 import { InraidController } from "@spt-aki/controllers/InraidController";
+import { ApplicationContext } from "@spt-aki/context/ApplicationContext";
+import { ContextVariableType } from "@spt-aki/context/ContextVariableType";
 import { PlayerScavGenerator } from "@spt-aki/generators/PlayerScavGenerator";
 import { HealthHelper } from "@spt-aki/helpers/HealthHelper";
 import { InRaidHelper } from "@spt-aki/helpers/InRaidHelper";
@@ -7,11 +11,15 @@ import { ProfileHelper } from "@spt-aki/helpers/ProfileHelper";
 import { QuestHelper } from "@spt-aki/helpers/QuestHelper";
 import { TraderHelper } from "@spt-aki/helpers/TraderHelper";
 import { ILocationBase } from "@spt-aki/models/eft/common/ILocationBase";
-import { IPmcData, IPostRaidPmcData } from "@spt-aki/models/eft/common/IPmcData";
+import { IPmcData } from "@spt-aki/models/eft/common/IPmcData";
+import { BodyPartHealth } from "@spt-aki/models/eft/common/tables/IBotBase";
+import { Item } from "@spt-aki/models/eft/common/tables/IItem";
+import { IRegisterPlayerRequestData } from "@spt-aki/models/eft/inRaid/IRegisterPlayerRequestData";
 import { ISaveProgressRequestData } from "@spt-aki/models/eft/inRaid/ISaveProgressRequestData";
 import { ConfigTypes } from "@spt-aki/models/enums/ConfigTypes";
 import { PlayerRaidEndState } from "@spt-aki/models/enums/PlayerRaidEndState";
 import { QuestStatus } from "@spt-aki/models/enums/QuestStatus";
+import { Traders } from "@spt-aki/models/enums/Traders";
 import { IAirdropConfig } from "@spt-aki/models/spt/config/IAirdropConfig";
 import { IInRaidConfig } from "@spt-aki/models/spt/config/IInRaidConfig";
 import { ILogger } from "@spt-aki/models/spt/utils/ILogger";
@@ -19,16 +27,11 @@ import { ConfigServer } from "@spt-aki/servers/ConfigServer";
 import { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
 import { SaveServer } from "@spt-aki/servers/SaveServer";
 import { InsuranceService } from "@spt-aki/services/InsuranceService";
-import { JsonUtil } from "@spt-aki/utils/JsonUtil";
-import { TimeUtil } from "@spt-aki/utils/TimeUtil";
-import { inject, injectable } from "tsyringe";
-
-// local import
-import { ApplicationContext } from "@spt-aki/context/ApplicationContext";
-import { InventoryHelper } from "@spt-aki/helpers/InventoryHelper";
-import { Item } from "@spt-aki/models/eft/common/tables/IItem";
 import { MatchBotDetailsCacheService } from "@spt-aki/services/MatchBotDetailsCacheService";
 import { PmcChatResponseService } from "@spt-aki/services/PmcChatResponseService";
+import { JsonUtil } from "@spt-aki/utils/JsonUtil";
+import { TimeUtil } from "@spt-aki/utils/TimeUtil";
+
 import * as KYEConfig from "../config/config.json";
 
 @injectable()
@@ -78,7 +81,7 @@ export class KeepYourEquipment extends InraidController
      */
     protected savePmcProgress(sessionID: string, offraidData: ISaveProgressRequestData): void
     {
-        const preRaidProfile = this.saveServer.getProfile(sessionID);
+        let preRaidProfile = this.saveServer.getProfile(sessionID);
         const locationName = preRaidProfile.inraid.location.toLowerCase();
 
         const map: ILocationBase = this.databaseServer.getTables().locations[locationName].base;
@@ -88,8 +91,6 @@ export class KeepYourEquipment extends InraidController
         const preRaidGear = this.inRaidHelper.getPlayerGear(preRaidPmcData.Inventory.items);
 
         preRaidProfile.inraid.character = "pmc";
-
-        preRaidPmcData = this.inRaidHelper.updateProfileBaseStats(preRaidPmcData, offraidData, sessionID);
 
         // Check for exit status
         this.markOrRemoveFoundInRaidItems(offraidData, preRaidPmcData, false);
@@ -114,7 +115,7 @@ export class KeepYourEquipment extends InraidController
             preRaidPmcData = this.inRaidHelper.setInventory(sessionID, preRaidPmcData, offraidData.profile);
         }
 
-        this.healthHelper.saveVitality(preRaidPmcData, offraidData.health, sessionID);
+        this.healthHelper.saveVitality(preRaidPmcData, offraidData?.health, sessionID);
 
         // Remove inventory if player died and send insurance items
         if (mapHasInsuranceEnabled)
@@ -155,6 +156,8 @@ export class KeepYourEquipment extends InraidController
         {
             this.insuranceService.sendInsuredItems(preRaidPmcData, sessionID, map.Id);
         }
+
+        preRaidPmcData = this.inRaidHelper.updateProfileBaseStats(preRaidPmcData, offraidData, sessionID);
     }
 
     /**
@@ -281,12 +284,7 @@ export class KeepYourEquipment extends InraidController
 
     protected markOrRemoveFoundInRaidItems(offraidData: ISaveProgressRequestData, pmcData: IPmcData, isPlayerScav: boolean = true): void
     {
-        if (offraidData.exit === PlayerRaidEndState.SURVIVED || KYEConfig.enableFoundInRaid)
-        {
-            // Mark found items and replace item ID's if the player survived
-            offraidData.profile = this.addSpawnedInSessionPropertyToItems(pmcData, offraidData.profile, isPlayerScav);
-        }
-        else if (offraidData.exit !== PlayerRaidEndState.SURVIVED)
+        if (offraidData.exit !== PlayerRaidEndState.SURVIVED && !KYEConfig.enableFoundInRaid)
         {
             // Remove FIR status if the player didn't survive
             offraidData.profile = this.inRaidHelper.removeSpawnedInSessionPropertyFromItems(offraidData.profile);
@@ -303,10 +301,11 @@ export class KeepYourEquipment extends InraidController
      */
     private addSpawnedInSessionPropertyToItems(preRaidProfile: IPmcData, postRaidProfile: IPostRaidPmcData, isPlayerScav: boolean): IPostRaidPmcData
     {
+        if (!preRaidProfile) return;
         for (const item of postRaidProfile.Inventory.items)
         {
             if (!isPlayerScav)
-            {
+            {)
                 const itemExistsInProfile = preRaidProfile.Inventory.items.find((itemData) => item._id === itemData._id);
                 if (itemExistsInProfile)
                 {
