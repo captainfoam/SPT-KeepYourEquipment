@@ -66,7 +66,7 @@ export class KYEHelper extends InRaidHelper
         }
         const lostOnDeathDefaults = this.configServer.getConfig(ConfigTypes.LOST_ON_DEATH);
 
-        this.lostOnDeathConfig = KYEConfig.enableFoundInRaid ? { ...lostOnDeathDefaults, ...lostOnDeathOverrides } : lostOnDeathDefaults;
+        this.lostOnDeathConfig = KYEConfig.advancedMode ? { ...lostOnDeathDefaults, ...lostOnDeathOverrides } : lostOnDeathDefaults;
         this.inRaidConfig = this.configServer.getConfig(ConfigTypes.IN_RAID);
     }
 

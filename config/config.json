@@ -3,6 +3,7 @@
 	"keepSecuredContainer": true,
 	"enableFoundInRaid": false,
 	"keepMapKeys": true,
+	"advancedMode": false,
 	"equipmentToKeep": {
 		"ArmBand": true,
 		"Compass": true,
@@ -12,7 +13,7 @@
 		"ArmorVest": true,
 		"Eyewear": true,
 		"TacticalVest": true,
-		"Backpack": false,
+		"Backpack": true,
 		"Holster": true,
 		"FirstPrimaryWeapon": true,
 		"SecondPrimaryWeapon": true,
