@@ -95,22 +95,4 @@ export class KYEHelper extends InRaidHelper
             }
         }
     }
-
-    public setInventory(sessionID: string, serverProfile: IPmcData, postRaidProfile: IPmcData): IPmcData
-    {
-        // Store insurance (as removeItem() removes insurance also)
-        const insured = this.jsonUtil.clone(serverProfile?.InsuredItems);
-
-        // Remove possible equipped items from before the raid
-        this.inventoryHelper.removeItem(serverProfile, serverProfile?.Inventory.equipment, sessionID);
-        this.inventoryHelper.removeItem(serverProfile, serverProfile?.Inventory.questRaidItems, sessionID);
-        this.inventoryHelper.removeItem(serverProfile, serverProfile?.Inventory.sortingTable, sessionID);
-
-        // Add the new items
-        serverProfile.Inventory.items = [...postRaidProfile?.Inventory.items, ...serverProfile?.Inventory.items];
-        serverProfile.Inventory.fastPanel = postRaidProfile?.Inventory.fastPanel;
-        serverProfile.InsuredItems = insured;
-
-        return serverProfile;
-    }
 }
