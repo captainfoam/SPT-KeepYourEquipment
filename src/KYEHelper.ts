@@ -59,6 +59,7 @@ export class KYEHelper extends InRaidHelper
 
         const lostOnDeathOverrides = {
             "equipment": this.invert({ ...{
+                "Pocket": true,
                 "SecuredContainer": true
             }, ...KYEConfig.equipmentToKeep}),
             "questItems": true,
@@ -111,7 +112,7 @@ export class KYEHelper extends InRaidHelper
             }
 
             // Pocket items are not lost on death
-            if (x.slotId.startsWith("pocket"))
+            if (x?.slotId?.startsWith("pocket"))
             {
                 return this.lostOnDeathConfig.equipment.Pocket;
             }
