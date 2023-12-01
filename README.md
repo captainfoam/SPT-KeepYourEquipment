@@ -32,9 +32,14 @@ Replace the `KeepYourEquipment` folder in the `user/mods` folder. Since version 
 - **keepSecuredContainer**: true/false (Default: `true`, `keepOriginalEquipment` must also be set to `true`)
     - Decides if the secured container contents are reset post-death. Note: potential for item duplication exists if raid items are moved to the secured container.
 - **enableFoundInRaid**: true/false (Default: `false`)
-    - Set to true to retain FIR status for raid-acquired items post-death.
+    - Set to true to retain Found-In-Raid (FIR) status for raid-acquired items post-death.
 - **keepMapKeys**: true/false (Default: `true`)
     - Normally, the game will consume your Labs keycard on a successful raid. By default, this mod will keep your keycard, because you're already using this mod to keep your original equipment, so why not? ;)
+- **advancedMode**: true/false (Default: `false`)
+    - Play how you want! Want to only keep only your weapons? Just your armor? Set this to `true` and go through `equipmentToKeep` to customize this mod to keep/discard whatever you want!
+- **equipmentToKeep**:
+    - Customize this configuration value to tell the mod to keep/discard certain things. `true` means they will be kept after you death, and `false` means they will not.
+    - This _should_ work with `enableFoundInRaid`, so if you have your backpack set to `true`, it will keep items found in raid as well.
 
 ## Encountered a bug or want a feature?
 Please [create an issue](https://github.com/captainfoam/SPT-KeepYourEquipment/issues) in the project page and I'll take a look!
