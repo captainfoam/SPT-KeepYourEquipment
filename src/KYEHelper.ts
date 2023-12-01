@@ -57,16 +57,18 @@ export class KYEHelper extends InRaidHelper
             configServer
         );
 
-        let lostOnDeathOverrides = KYEConfig.equipmentToKeep;
+        const lostOnDeathOverrides = {
+            "equipment": this.invert({ ...{
+                "Pockets": true,
+                "SecuredContainer": true
+            }, ...KYEConfig.equipmentToKeep}),
+            "questItems": true,
+            "specialSlotItems": false
+        };
 
-        // invert booleans as SPT expects `false` to mean keep and `true` to mean remove
-        for (let toKeep in lostOnDeathOverrides)
-        {
-            lostOnDeathOverrides[toKeep] = !lostOnDeathOverrides[toKeep];
-        }
         const lostOnDeathDefaults = this.configServer.getConfig(ConfigTypes.LOST_ON_DEATH);
 
-        this.lostOnDeathConfig = KYEConfig.advancedMode ? { ...lostOnDeathDefaults, ...lostOnDeathOverrides } : lostOnDeathDefaults;
+        this.lostOnDeathConfig = KYEConfig.advancedMode ? lostOnDeathOverrides : lostOnDeathDefaults;
         this.inRaidConfig = this.configServer.getConfig(ConfigTypes.IN_RAID);
     }
 
@@ -94,5 +96,15 @@ export class KYEHelper extends InRaidHelper
                 break;
             }
         }
+    }
+
+    private invert(equipment: object) {
+        // invert booleans as SPT expects `false` to mean keep and `true` to mean remove
+        for (let toKeep in equipment)
+        {
+            equipment[toKeep] = !equipment[toKeep];
+        }
+
+        return equipment;
     }
 }
