@@ -1,22 +1,22 @@
 {
-	"keepOriginalEquipment": false,
-	"keepSecuredContainer": false,
-	"enableFoundInRaid": true,
-	"keepMapKeys": true,
-	"advancedMode": true,
-	"equipmentToKeep": {
-		"ArmBand": true,
-		"Compass": true,
-		"Headwear": false,
-		"Earpiece": false,
-		"FaceCover": false,
-		"ArmorVest": false,
-		"Eyewear": false,
-		"TacticalVest": false,
-		"Backpack": false,
-		"Holster": true,
-		"FirstPrimaryWeapon": false,
-		"SecondPrimaryWeapon": false,
-		"Scabbard": true
-		}
+  "keepOriginalEquipment": false,
+  "keepSecuredContainer": false,
+  "enableFoundInRaid": true,
+  "keepMapKeys": true,
+  "advancedMode": true,
+  "equipmentToKeep": {
+    "ArmBand": true,
+    "Compass": true,
+    "Headwear": false,
+    "Earpiece": false,
+    "FaceCover": false,
+    "ArmorVest": false,
+    "Eyewear": false,
+    "TacticalVest": false,
+    "Backpack": false,
+    "Holster": true,
+    "FirstPrimaryWeapon": false,
+    "SecondPrimaryWeapon": false,
+    "Scabbard": true
+    }
 }
